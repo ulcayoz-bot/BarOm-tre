@@ -533,26 +533,64 @@ function Cocktails({ stock }) {
   var stockIngredients = stock.map(function(p) {
     return p.name.toLowerCase();
   });
-  function findOffline(ingrs) {
-    var terms = ingrs.map(function(i) {
-      return i.toLowerCase().trim();
+  var CAT_KEYWORDS = {
+    "Rhums": ["rhum", "rhum blanc", "rhum brun", "cacha\xE7a", "pisco"],
+    "Vodkas": ["vodka"],
+    "Gins": ["gin"],
+    "Tequilas": ["tequila"],
+    "Whiskys": ["whiskey", "whisky", "bourbon", "scotch"],
+    "Liqueurs": ["liqueur", "cointreau", "amaretto", "maraschino", "baileys", "chartreuse", "cura\xE7ao", "schnapps", "orgeat", "sureau", "cassis", "passion", "framboise", "p\xEAche", "coco", "vanille"],
+    "Ap\xE9ritifs": ["aperol", "campari", "vermouth", "martini", "lillet"],
+    "Vins": ["prosecco", "champagne", "vin", "cr\xE8me de cassis"],
+    "Sirops": ["sirop", "sirop de sucre", "grenadine", "grenadine", "orgeat", "agave"],
+    "Jus": ["jus", "jus d'orange", "jus de citron", "jus d'ananas", "jus de cranberry", "jus de pamplemousse", "jus de passion"],
+    "Softs": ["ginger beer", "coca-cola", "cola", "limonade", "eau gazeuse", "eau tonic", "tonic", "soda"],
+    "Frais": ["citron", "citron vert", "menthe", "concombre", "fraise", "framboise", "gingembre"],
+    "Bi\xE8res": ["bi\xE8re"]
+  };
+  function expandTerms(stockItems) {
+    var expanded = [];
+    stockItems.forEach(function(item) {
+      var low = item.toLowerCase();
+      expanded.push(low);
+      low.split(/\s+/).forEach(function(w) {
+        if (w.length > 3) expanded.push(w);
+      });
     });
+    stock.forEach(function(p) {
+      var kws = CAT_KEYWORDS[p.cat] || [];
+      var name = p.name.toLowerCase();
+      var isSelected = stockItems.some(function(s) {
+        return s.toLowerCase() === name;
+      });
+      if (isSelected) kws.forEach(function(k) {
+        expanded.push(k);
+      });
+    });
+    return [...new Set(expanded)];
+  }
+  function matchIngredient(ing, terms) {
+    var ingLow = ing.toLowerCase();
+    var ingWords = ingLow.split(/\s+/);
+    return terms.some(function(t) {
+      var tLow = t.toLowerCase();
+      if (tLow === ingLow) return true;
+      if (tLow.includes(ingLow) || ingLow.includes(tLow)) return true;
+      return ingWords.some(function(w) {
+        return w.length > 3 && (tLow.includes(w) || w.includes(tLow));
+      });
+    });
+  }
+  function findOffline(ingrs) {
+    var terms = expandTerms(ingrs);
     var matches = COCKTAIL_DB.map(function(c) {
       var found = c.ingredients.filter(function(ing) {
-        return terms.some(function(t) {
-          return t.includes(ing.toLowerCase().split(" ").pop()) || ing.toLowerCase().includes(t.split(" ").pop()) || t === ing.toLowerCase();
-        });
+        return matchIngredient(ing, terms);
       });
-      return {
-        cocktail: c,
-        matched: found.length,
-        total: c.ingredients.length,
-        missing: c.ingredients.filter(function(ing) {
-          return !terms.some(function(t) {
-            return t.includes(ing.toLowerCase().split(" ").pop()) || ing.toLowerCase().includes(t.split(" ").pop());
-          });
-        })
-      };
+      var missing = c.ingredients.filter(function(ing) {
+        return !matchIngredient(ing, terms);
+      });
+      return { cocktail: c, matched: found.length, total: c.ingredients.length, missing };
     });
     return matches.filter(function(m) {
       return m.matched >= 1;
@@ -1550,6 +1588,10 @@ function Manager({ stock, setStock, checklist, setChecklist, employees, setEmplo
   const [ep, setEp] = useState(false);
   const [eeid, setEeid] = useState(null);
   const [emojiCat, setEmojiCat] = useState(0);
+  const [newCat, setNewCat] = useState("");
+  const [catDelId, setCatDelId] = useState(null);
+  const [selSnap1, setSelSnap1] = useState("");
+  const [selSnap2, setSelSnap2] = useState("");
   const [ef, setEf] = useState({ name: "", role: "employe", pin: "", emoji: "\u{1F378}", color: EMP_COLORS[0] });
   const [pv, setPv] = useState(false);
   const [ee, setEe] = useState("");
@@ -1582,8 +1624,6 @@ function Manager({ stock, setStock, checklist, setChecklist, employees, setEmplo
       }
     }, 800);
   }
-  const [newCat, setNewCat] = useState("");
-  const [catDelId, setCatDelId] = useState(null);
   function openAddEmp() {
     var fc = EMP_COLORS.find((c) => !employees.map((e) => e.color).includes(c)) || EMP_COLORS[0];
     setEf({ name: "", role: "employe", pin: "", emoji: EMP_EMOJIS[employees.length % EMP_EMOJIS.length], color: fc });
@@ -1697,8 +1737,6 @@ function Manager({ stock, setStock, checklist, setChecklist, employees, setEmplo
     setMsg("\u2705 Sauvegarde t\xE9l\xE9charg\xE9e !");
     setTimeout(() => setMsg(""), 3e3);
   }
-  const [selSnap1, setSelSnap1] = useState("");
-  const [selSnap2, setSelSnap2] = useState("");
   var TABS = [["equipe", "\u{1F465} \xC9quipe"], ["inventaire", "\u{1F4E6} Stock"], ["alertes", "\u{1F534} Alertes"], ["commande", "\u{1F4CB} Commande"], ["comparaison", "\u{1F4CA} Compa"], ["importer", "\u{1F4F8} Importer"], ["categories", "\u{1F3F7}\uFE0F Cat\xE9gories"], ["checklist", "\u2705 Checklist"], ["historique", "\u{1F4D5} Historique"], ["export", "\u2B07\uFE0F Export"], ["reglages", "\u2699\uFE0F R\xE9glages"], ["sync", "\u{1F4E1} Sync"]];
   return /* @__PURE__ */ React.createElement("div", { style: { padding: "22px 18px", maxWidth: 860, margin: "0 auto" } }, /* @__PURE__ */ React.createElement("div", { style: { marginBottom: 22 } }, /* @__PURE__ */ React.createElement("h1", { style: { ...F, fontSize: 30, fontWeight: 700, margin: 0 } }, "\u{1F510} Manager"), /* @__PURE__ */ React.createElement("p", { style: { color: C.ok, fontSize: 14, margin: "4px 0 0" } }, "Connect\xE9 : ", user.emoji, " ", user.name)), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 7, overflowX: "auto", paddingBottom: 4, marginBottom: 24 } }, TABS.map(([k, l]) => /* @__PURE__ */ React.createElement("button", { key: k, onClick: () => setTab(k), style: { padding: "10px 18px", borderRadius: 11, border: `1.5px solid ${tab === k ? C.gold : C.border}`, background: tab === k ? C.gold + "18" : "transparent", color: tab === k ? C.gold : C.muted, fontWeight: 700, cursor: "pointer", fontSize: 14, ...S, whiteSpace: "nowrap" } }, l))), tab === "equipe" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 17 } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h2", { style: { ...F, color: C.text, fontSize: 22, fontWeight: 700, margin: 0 } }, "\xC9quipe"), /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 14, margin: "3px 0 0" } }, employees.length, " compte(s)")), /* @__PURE__ */ React.createElement(Btn, { kids: "\uFF0B Ajouter", onClick: openAddEmp, gold: true, sm: true })), ee && /* @__PURE__ */ React.createElement("div", { style: { padding: "11px 15px", background: C.danger + "15", border: `1px solid ${C.danger}30`, borderRadius: 11, marginBottom: 13 } }, /* @__PURE__ */ React.createElement("p", { style: { color: C.danger, fontSize: 15, margin: 0 } }, "\u26A0\uFE0F ", ee), /* @__PURE__ */ React.createElement("button", { onClick: () => setEe(""), style: { float: "right", background: "none", border: "none", color: C.muted, cursor: "pointer", marginTop: -20 } }, "\xD7")), ep && /* @__PURE__ */ React.createElement(Card, { style: { marginBottom: 18, border: `2px solid ${C.gold}44` } }, /* @__PURE__ */ React.createElement("h3", { style: { ...F, color: C.text, fontSize: 18, fontWeight: 700, margin: "0 0 18px" } }, eeid ? "\u270E Modifier l'employ\xE9" : "\uFF0B Nouvel employ\xE9"), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "center", marginBottom: 16 } }, /* @__PURE__ */ React.createElement("div", { style: { width: 72, height: 72, borderRadius: "50%", background: ef.color + "22", border: `3px solid ${ef.color}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32 } }, ef.emoji)), /* @__PURE__ */ React.createElement(Lbl, null, "Emoji"), /* @__PURE__ */ React.createElement("div", { style: { marginBottom: 16 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 6, overflowX: "auto", paddingBottom: 6, marginBottom: 8 } }, EMP_EMOJI_CATS.map(function(cat, ci) {
     return /* @__PURE__ */ React.createElement(
@@ -2054,6 +2092,6 @@ function mountApp(){
 }
 mountApp();
 </script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister();});});setTimeout(function(){var b=new Blob(["const C='bm-v23';self.addEventListener('install',function(e){self.skipWaiting();e.waitUntil(caches.keys().then(function(k){return Promise.all(k.map(function(n){return caches.delete(n);}));}));});self.addEventListener('activate',function(e){self.clients.claim();});self.addEventListener('fetch',function(e){if(e.request.mode==='navigate'){e.respondWith(fetch(e.request));return;}});"],{type:"application/javascript"});navigator.serviceWorker.register(URL.createObjectURL(b),{scope:"/"}).catch(function(){});},1000);}</script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister();});});setTimeout(function(){var b=new Blob(["const C='bm-v24';self.addEventListener('install',function(e){self.skipWaiting();e.waitUntil(caches.keys().then(function(k){return Promise.all(k.map(function(n){return caches.delete(n);}));}));});self.addEventListener('activate',function(e){self.clients.claim();});self.addEventListener('fetch',function(e){if(e.request.mode==='navigate'){e.respondWith(fetch(e.request));return;}});"],{type:"application/javascript"});navigator.serviceWorker.register(URL.createObjectURL(b),{scope:"/"}).catch(function(){});},1000);}</script>
 </body>
 </html>
