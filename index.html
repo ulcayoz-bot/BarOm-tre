@@ -1599,7 +1599,7 @@ function ChecklistManager({ checklist, setChecklist }) {
     "\u2715"
   )))), checklist.length === 0 && /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", padding: "36px", color: C.muted, fontSize: 15 } }, "Aucune t\xE2che.")), /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 13, marginTop: 11, lineHeight: 1.6 } }, "\u{1F4A1} Utilisez \u25B2 \u25BC pour r\xE9ordonner les t\xE2ches."));
 }
-function Manager({ stock, setStock, checklist, setChecklist, employees, setEmployees, user, autoLogout, setAutoLogout, notes, setNotes, cats, setCats, repEmail, setRepEmail, ejKey, setEjKey, history, setHistory, addHist, syncUrl, setSyncUrl, syncStatus, pushSync, pullSync, snapshots, setSnapshots, theme, setTheme }) {
+function Manager({ stock, setStock, checklist, setChecklist, employees, setEmployees, user, autoLogout, setAutoLogout, notes, setNotes, cats, setCats, repEmail, setRepEmail, ejKey, setEjKey, history, setHistory, addHist, syncUrl, setSyncUrl, syncStatus, pushSync, pullSync, snapshots, setSnapshots, theme, setTheme, prices, setPrices, recipes, setRecipes }) {
   const [tab, setTab] = useState("equipe");
   const [msg, setMsg] = useState("");
   const [ep, setEp] = useState(false);
@@ -1609,6 +1609,7 @@ function Manager({ stock, setStock, checklist, setChecklist, employees, setEmplo
   const [catDelId, setCatDelId] = useState(null);
   const [selSnap1, setSelSnap1] = useState("");
   const [selSnap2, setSelSnap2] = useState("");
+  const [editRecipe, setEditRecipe] = useState(null);
   const [ef, setEf] = useState({ name: "", role: "employe", pin: "", emoji: "\u{1F378}", color: EMP_COLORS[0] });
   const [pv, setPv] = useState(false);
   const [ee, setEe] = useState("");
@@ -1754,7 +1755,7 @@ function Manager({ stock, setStock, checklist, setChecklist, employees, setEmplo
     setMsg("\u2705 Sauvegarde t\xE9l\xE9charg\xE9e !");
     setTimeout(() => setMsg(""), 3e3);
   }
-  var TABS = [["equipe", "\u{1F465} \xC9quipe"], ["inventaire", "\u{1F4E6} Stock"], ["alertes", "\u{1F534} Alertes"], ["commande", "\u{1F4CB} Commande"], ["comparaison", "\u{1F4CA} Compa"], ["importer", "\u{1F4F8} Importer"], ["categories", "\u{1F3F7}\uFE0F Cat\xE9gories"], ["checklist", "\u2705 Checklist"], ["historique", "\u{1F4D5} Historique"], ["export", "\u2B07\uFE0F Export"], ["reglages", "\u2699\uFE0F R\xE9glages"], ["sync", "\u{1F4E1} Sync"]];
+  var TABS = [["equipe", "\u{1F465} \xC9quipe"], ["inventaire", "\u{1F4E6} Stock"], ["alertes", "\u{1F534} Alertes"], ["commande", "\u{1F4CB} Commande"], ["marges", "\u{1F4B0} Marges"], ["recettes", "\u{1F9FE} Recettes"], ["comparaison", "\u{1F4CA} Compa"], ["importer", "\u{1F4F8} Importer"], ["categories", "\u{1F3F7}\uFE0F Cat\xE9gories"], ["checklist", "\u2705 Checklist"], ["historique", "\u{1F4D5} Historique"], ["export", "\u2B07\uFE0F Export"], ["reglages", "\u2699\uFE0F R\xE9glages"], ["sync", "\u{1F4E1} Sync"]];
   return /* @__PURE__ */ React.createElement("div", { style: { padding: "22px 18px", maxWidth: 860, margin: "0 auto" } }, /* @__PURE__ */ React.createElement("div", { style: { marginBottom: 22 } }, /* @__PURE__ */ React.createElement("h1", { style: { ...F, fontSize: 30, fontWeight: 700, margin: 0 } }, "\u{1F510} Manager"), /* @__PURE__ */ React.createElement("p", { style: { color: C.ok, fontSize: 14, margin: "4px 0 0" } }, "Connect\xE9 : ", user.emoji, " ", user.name)), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 7, overflowX: "auto", paddingBottom: 4, marginBottom: 24 } }, TABS.map(([k, l]) => /* @__PURE__ */ React.createElement("button", { key: k, onClick: () => setTab(k), style: { padding: "10px 18px", borderRadius: 11, border: `1.5px solid ${tab === k ? C.gold : C.border}`, background: tab === k ? C.gold + "18" : "transparent", color: tab === k ? C.gold : C.muted, fontWeight: 700, cursor: "pointer", fontSize: 14, ...S, whiteSpace: "nowrap" } }, l))), tab === "equipe" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 17 } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h2", { style: { ...F, color: C.text, fontSize: 22, fontWeight: 700, margin: 0 } }, "\xC9quipe"), /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 14, margin: "3px 0 0" } }, employees.length, " compte(s)")), /* @__PURE__ */ React.createElement(Btn, { kids: "\uFF0B Ajouter", onClick: openAddEmp, gold: true, sm: true })), ee && /* @__PURE__ */ React.createElement("div", { style: { padding: "11px 15px", background: C.danger + "15", border: `1px solid ${C.danger}30`, borderRadius: 11, marginBottom: 13 } }, /* @__PURE__ */ React.createElement("p", { style: { color: C.danger, fontSize: 15, margin: 0 } }, "\u26A0\uFE0F ", ee), /* @__PURE__ */ React.createElement("button", { onClick: () => setEe(""), style: { float: "right", background: "none", border: "none", color: C.muted, cursor: "pointer", marginTop: -20 } }, "\xD7")), ep && /* @__PURE__ */ React.createElement(Card, { style: { marginBottom: 18, border: `2px solid ${C.gold}44` } }, /* @__PURE__ */ React.createElement("h3", { style: { ...F, color: C.text, fontSize: 18, fontWeight: 700, margin: "0 0 18px" } }, eeid ? "\u270E Modifier l'employ\xE9" : "\uFF0B Nouvel employ\xE9"), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "center", marginBottom: 16 } }, /* @__PURE__ */ React.createElement("div", { style: { width: 72, height: 72, borderRadius: "50%", background: ef.color + "22", border: `3px solid ${ef.color}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32 } }, ef.emoji)), /* @__PURE__ */ React.createElement(Lbl, null, "Emoji"), /* @__PURE__ */ React.createElement("div", { style: { marginBottom: 16 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 6, overflowX: "auto", paddingBottom: 6, marginBottom: 8 } }, EMP_EMOJI_CATS.map(function(cat, ci) {
     return /* @__PURE__ */ React.createElement(
       "button",
@@ -1869,7 +1870,202 @@ function Manager({ stock, setStock, checklist, setChecklist, employees, setEmplo
     var NL = "\n";
     var body = encodeURIComponent(lines.join(NL));
     window.location.href = "mailto:?subject=" + subject + "&body=" + body;
-  }, gold: true, full: true, style: { padding: "14px", fontSize: 16 } }))), tab === "comparaison" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h2", { style: { ...F, color: C.text, fontSize: 22, fontWeight: 700, margin: 0 } }, "\u{1F4CA} Comparaison"), /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 14, margin: "3px 0 0" } }, snapshots.length, " inventaire(s) sauvegard\xE9(s)")), /* @__PURE__ */ React.createElement(Btn, { kids: "\u{1F4F8} Sauvegarder maintenant", onClick: function() {
+  }, gold: true, full: true, style: { padding: "14px", fontSize: 16 } }))), tab === "marges" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { style: { marginBottom: 20 } }, /* @__PURE__ */ React.createElement("h2", { style: { ...F, color: C.text, fontSize: 22, fontWeight: 700, margin: 0 } }, "\u{1F4B0} Marges & Prix de vente"), /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 14, margin: "4px 0 0" } }, "Renseigne le prix d'achat et de vente de chaque produit")), (function() {
+    var priced = stock.filter(function(p) {
+      return prices[p.id] && prices[p.id].buy;
+    });
+    var totalBuy = priced.reduce(function(s, p) {
+      return s + (prices[p.id].buy || 0) * p.qty;
+    }, 0);
+    var totalSell = priced.reduce(function(s, p) {
+      return s + (prices[p.id].sell || 0) * p.qty;
+    }, 0);
+    var avgMargin = priced.length ? priced.reduce(function(s, p) {
+      var b = prices[p.id].buy || 0, sv = prices[p.id].sell || 0;
+      return s + (sv > 0 ? (sv - b) / sv * 100 : 0);
+    }, 0) / priced.length : 0;
+    if (!priced.length) return null;
+    return /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 18 } }, [
+      { label: "Valeur achat stock", val: totalBuy.toFixed(0) + "\u20AC", color: C.blue },
+      { label: "Valeur vente stock", val: totalSell.toFixed(0) + "\u20AC", color: C.ok },
+      { label: "Marge moyenne", val: avgMargin.toFixed(0) + "%", color: avgMargin >= 60 ? C.ok : avgMargin >= 40 ? C.warn : C.danger }
+    ].map(function(s, i) {
+      return /* @__PURE__ */ React.createElement("div", { key: i, style: { background: C.card, borderRadius: 14, padding: "14px 10px", textAlign: "center", border: `1px solid ${C.border}`, boxShadow: "0 1px 8px #1e1e2e06" } }, /* @__PURE__ */ React.createElement("p", { style: { ...F, color: s.color, fontSize: 20, fontWeight: 800, margin: 0 } }, s.val), /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.4, marginTop: 4, lineHeight: 1.3 } }, s.label));
+    }));
+  })(), /* @__PURE__ */ React.createElement("div", { style: { borderRadius: 16, overflow: "hidden", border: `1px solid ${C.border}` } }, stock.map(function(p, i) {
+    var pr = prices[p.id] || {};
+    var buy = parseFloat(pr.buy) || 0;
+    var sell = parseFloat(pr.sell) || 0;
+    var margin = sell > 0 ? Math.round((sell - buy) / sell * 100) : null;
+    var marginColor = margin === null ? C.muted : margin >= 60 ? C.ok : margin >= 40 ? C.warn : C.danger;
+    return /* @__PURE__ */ React.createElement("div", { key: p.id, style: { background: i % 2 === 0 ? C.card : C.card2, borderBottom: i < stock.length - 1 ? `1px solid ${C.border}` : "none", padding: "12px 14px" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10, marginBottom: 8 } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 20, flexShrink: 0 } }, p.emoji), /* @__PURE__ */ React.createElement("p", { style: { color: C.text, fontWeight: 600, fontSize: 14, flex: 1, margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" } }, p.name), margin !== null && /* @__PURE__ */ React.createElement("span", { style: { padding: "2px 8px", borderRadius: 20, background: marginColor + "15", color: marginColor, fontSize: 12, fontWeight: 700, flexShrink: 0 } }, margin, "%")), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 10 } }, /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, margin: "0 0 4px" } }, "Prix achat (\u20AC)"), /* @__PURE__ */ React.createElement(
+      "input",
+      {
+        type: "number",
+        value: pr.buy || "",
+        onChange: function(e) {
+          setPrices(function(prev) {
+            var n = { ...prev };
+            n[p.id] = { ...n[p.id], buy: e.target.value };
+            return n;
+          });
+        },
+        placeholder: "0.00",
+        style: { width: "100%", padding: "9px 11px", background: C.surface, border: `1.5px solid ${C.border}`, borderRadius: 10, color: C.text, fontSize: 15, ...S, boxSizing: "border-box" }
+      }
+    )), /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, margin: "0 0 4px" } }, "Prix vente (\u20AC)"), /* @__PURE__ */ React.createElement(
+      "input",
+      {
+        type: "number",
+        value: pr.sell || "",
+        onChange: function(e) {
+          setPrices(function(prev) {
+            var n = { ...prev };
+            n[p.id] = { ...n[p.id], sell: e.target.value };
+            return n;
+          });
+        },
+        placeholder: "0.00",
+        style: { width: "100%", padding: "9px 11px", background: C.surface, border: `1.5px solid ${C.border}`, borderRadius: 10, color: C.text, fontSize: 15, ...S, boxSizing: "border-box" }
+      }
+    )), sell > 0 && buy > 0 && /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", flexShrink: 0, paddingTop: 18 } }, /* @__PURE__ */ React.createElement("p", { style: { color: marginColor, fontWeight: 800, fontSize: 16, margin: 0, ...F } }, (sell - buy).toFixed(2), "\u20AC"), /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 10, margin: "2px 0 0" } }, "b\xE9n\xE9fice"))));
+  })), /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 12, marginTop: 10, lineHeight: 1.6 } }, "\u{1F4A1} Les prix sont sauvegard\xE9s automatiquement et utilis\xE9s dans les recettes.")), tab === "recettes" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h2", { style: { ...F, color: C.text, fontSize: 22, fontWeight: 700, margin: 0 } }, "\u{1F9FE} Recettes maison"), /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 14, margin: "4px 0 0" } }, recipes.length, " recette(s) cr\xE9\xE9e(s)")), /* @__PURE__ */ React.createElement(Btn, { kids: "\uFF0B Cr\xE9er", onClick: function() {
+    setEditRecipe({ name: "", sellPrice: "", steps: "", ingredients: [{ productId: "", qty: "", unit: "Bouteille" }] });
+  }, gold: true, sm: true })), editRecipe && /* @__PURE__ */ React.createElement(Card, { style: { marginBottom: 18, border: `2px solid ${C.gold}33` } }, /* @__PURE__ */ React.createElement("h3", { style: { ...F, color: C.text, fontSize: 17, fontWeight: 700, margin: "0 0 16px" } }, editRecipe.id ? "\u270E Modifier" : "\uFF0B Nouvelle recette"), /* @__PURE__ */ React.createElement(Lbl, null, "Nom de la recette / cocktail"), /* @__PURE__ */ React.createElement(Inp, { value: editRecipe.name, onChange: function(e) {
+    setEditRecipe(function(r) {
+      return { ...r, name: e.target.value };
+    });
+  }, placeholder: "ex: Mojito maison, Spritz signature\u2026", style: { marginBottom: 12 } }), /* @__PURE__ */ React.createElement(Lbl, null, "Prix de vente (\u20AC)"), /* @__PURE__ */ React.createElement(Inp, { value: editRecipe.sellPrice, onChange: function(e) {
+    setEditRecipe(function(r) {
+      return { ...r, sellPrice: e.target.value };
+    });
+  }, placeholder: "ex: 9.50", type: "number", style: { marginBottom: 14 } }), /* @__PURE__ */ React.createElement(Lbl, null, "Ingr\xE9dients"), editRecipe.ingredients.map(function(ing, idx) {
+    var pr = ing.productId ? prices[ing.productId] || {} : {};
+    var prod = ing.productId ? stock.find(function(p) {
+      return String(p.id) === String(ing.productId);
+    }) : null;
+    var costUnit = pr.buy && prod ? parseFloat(pr.buy) : 0;
+    var costLine = costUnit && ing.qty ? (costUnit * parseFloat(ing.qty || 0)).toFixed(2) : null;
+    return /* @__PURE__ */ React.createElement("div", { key: idx, style: { display: "flex", gap: 8, marginBottom: 8, alignItems: "flex-end" } }, /* @__PURE__ */ React.createElement("div", { style: { flex: 2 } }, idx === 0 && /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, margin: "0 0 4px" } }, "Produit"), /* @__PURE__ */ React.createElement(
+      "select",
+      {
+        value: ing.productId,
+        onChange: function(e) {
+          setEditRecipe(function(r) {
+            var ni = [...r.ingredients];
+            ni[idx] = { ...ni[idx], productId: e.target.value, unit: stock.find(function(p) {
+              return String(p.id) === e.target.value;
+            }) ? stock.find(function(p) {
+              return String(p.id) === e.target.value;
+            }).unit : "Bouteille" };
+            return { ...r, ingredients: ni };
+          });
+        },
+        style: { width: "100%", padding: "9px 10px", background: C.surface, border: `1.5px solid ${C.border}`, borderRadius: 10, color: C.text, fontSize: 14, ...S }
+      },
+      /* @__PURE__ */ React.createElement("option", { value: "" }, "Choisir\u2026"),
+      stock.map(function(p) {
+        return /* @__PURE__ */ React.createElement("option", { key: p.id, value: p.id }, p.emoji, " ", p.name);
+      })
+    )), /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, idx === 0 && /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, margin: "0 0 4px" } }, "Qt\xE9"), /* @__PURE__ */ React.createElement(
+      "input",
+      {
+        type: "number",
+        value: ing.qty,
+        onChange: function(e) {
+          setEditRecipe(function(r) {
+            var ni = [...r.ingredients];
+            ni[idx] = { ...ni[idx], qty: e.target.value };
+            return { ...r, ingredients: ni };
+          });
+        },
+        placeholder: "0",
+        style: { width: "100%", padding: "9px 10px", background: C.surface, border: `1.5px solid ${C.border}`, borderRadius: 10, color: C.text, fontSize: 14, ...S, boxSizing: "border-box" }
+      }
+    )), costLine && /* @__PURE__ */ React.createElement("p", { style: { color: C.ok, fontSize: 12, fontWeight: 700, flexShrink: 0, paddingBottom: 10, minWidth: 40, textAlign: "right" } }, costLine, "\u20AC"), /* @__PURE__ */ React.createElement(IBtn, { onClick: function() {
+      setEditRecipe(function(r) {
+        return { ...r, ingredients: r.ingredients.filter(function(_, j) {
+          return j !== idx;
+        }) };
+      });
+    }, color: C.danger, size: 34 }, "\u2715"));
+  }), /* @__PURE__ */ React.createElement(
+    "button",
+    {
+      onClick: function() {
+        setEditRecipe(function(r) {
+          return { ...r, ingredients: [...r.ingredients, { productId: "", qty: "", unit: "Bouteille" }] };
+        });
+      },
+      style: { padding: "8px 16px", borderRadius: 10, border: `1.5px solid ${C.border}`, background: C.surface, color: C.muted, fontSize: 13, fontWeight: 600, cursor: "pointer", marginBottom: 14, ...S }
+    },
+    "\uFF0B Ajouter un ingr\xE9dient"
+  ), (function() {
+    var totalCost = editRecipe.ingredients.reduce(function(s, ing) {
+      var pr = ing.productId ? prices[ing.productId] || {} : {};
+      return s + (pr.buy && ing.qty ? parseFloat(pr.buy) * parseFloat(ing.qty || 0) : 0);
+    }, 0);
+    var sell = parseFloat(editRecipe.sellPrice) || 0;
+    var margin = sell > 0 ? Math.round((sell - totalCost) / sell * 100) : null;
+    var marginColor = margin === null ? C.muted : margin >= 60 ? C.ok : margin >= 40 ? C.warn : C.danger;
+    if (!totalCost) return null;
+    return /* @__PURE__ */ React.createElement("div", { style: { padding: "12px 14px", background: margin !== null ? marginColor + "10" : C.surface, border: `1px solid ${margin !== null ? marginColor + "30" : C.border}`, borderRadius: 12, marginBottom: 14 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center" } }, /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 13, margin: 0 } }, "Co\xFBt de revient"), /* @__PURE__ */ React.createElement("p", { style: { color: C.text, fontWeight: 800, fontSize: 16, margin: 0, ...F } }, totalCost.toFixed(2), "\u20AC")), sell > 0 && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6 } }, /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 13, margin: 0 } }, "Marge brute"), /* @__PURE__ */ React.createElement("p", { style: { color: marginColor, fontWeight: 800, fontSize: 16, margin: 0, ...F } }, margin, "% \xB7 ", (sell - totalCost).toFixed(2), "\u20AC")));
+  })(), /* @__PURE__ */ React.createElement(Lbl, null, "Pr\xE9paration (optionnel)"), /* @__PURE__ */ React.createElement(
+    "textarea",
+    {
+      value: editRecipe.steps,
+      onChange: function(e) {
+        setEditRecipe(function(r) {
+          return { ...r, steps: e.target.value };
+        });
+      },
+      placeholder: "D\xE9crire la pr\xE9paration, astuces, pr\xE9sentation\u2026",
+      rows: 3,
+      style: { width: "100%", padding: "11px 14px", background: C.surface, border: `1.5px solid ${C.border}`, borderRadius: 12, color: C.text, fontSize: 14, ...S, resize: "none", boxSizing: "border-box", marginBottom: 14 }
+    }
+  ), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 10 } }, /* @__PURE__ */ React.createElement(Btn, { kids: "Annuler", onClick: function() {
+    setEditRecipe(null);
+  }, full: true, style: { padding: "13px" } }), /* @__PURE__ */ React.createElement(Btn, { kids: editRecipe.id ? "\u2713 Enregistrer" : "\uFF0B Cr\xE9er", onClick: function() {
+    if (!editRecipe.name.trim()) return;
+    var recipe = {
+      ...editRecipe,
+      id: editRecipe.id || Date.now(),
+      updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+    };
+    setRecipes(function(rs) {
+      if (editRecipe.id) return rs.map(function(r) {
+        return r.id === editRecipe.id ? recipe : r;
+      });
+      return [recipe, ...rs];
+    });
+    setEditRecipe(null);
+  }, gold: true, full: true, style: { padding: "13px" } }))), recipes.length === 0 && !editRecipe && /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", padding: "40px 20px", background: C.card, borderRadius: 16, border: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 40, marginBottom: 12 } }, "\u{1F9FE}"), /* @__PURE__ */ React.createElement("p", { style: { ...F, color: C.text, fontSize: 17, fontWeight: 700, margin: "0 0 8px" } }, "Aucune recette encore"), /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 14 } }, "Cr\xE9e ta carte cocktails avec calcul de co\xFBt automatique")), recipes.map(function(recipe, i) {
+    var totalCost = recipe.ingredients.reduce(function(s, ing) {
+      var pr = ing.productId ? prices[ing.productId] || {} : {};
+      return s + (pr.buy && ing.qty ? parseFloat(pr.buy) * parseFloat(ing.qty || 0) : 0);
+    }, 0);
+    var sell = parseFloat(recipe.sellPrice) || 0;
+    var margin = sell > 0 ? Math.round((sell - totalCost) / sell * 100) : null;
+    var marginColor = margin === null ? C.muted : margin >= 60 ? C.ok : margin >= 40 ? C.warn : C.danger;
+    return /* @__PURE__ */ React.createElement("div", { key: recipe.id, style: { background: C.card, borderRadius: 16, marginBottom: 12, border: `1px solid ${C.border}`, boxShadow: "0 1px 8px #1e1e2e06", overflow: "hidden" } }, /* @__PURE__ */ React.createElement("div", { style: { padding: "16px" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 } }, /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("p", { style: { ...F, color: C.text, fontSize: 17, fontWeight: 700, margin: "0 0 2px" } }, recipe.name), /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 13, margin: 0 } }, recipe.ingredients.filter(function(i2) {
+      return i2.productId;
+    }).length, " ingr\xE9dient(s)")), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "right", flexShrink: 0, marginLeft: 10 } }, sell > 0 && /* @__PURE__ */ React.createElement("p", { style: { ...F, color: C.gold, fontSize: 20, fontWeight: 800, margin: 0 } }, sell.toFixed(2), "\u20AC"), margin !== null && /* @__PURE__ */ React.createElement("p", { style: { color: marginColor, fontSize: 13, fontWeight: 700, margin: "2px 0 0" } }, margin, "% marge"))), totalCost > 0 && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 12, padding: "10px 12px", background: C.surface, borderRadius: 10, marginBottom: 10 } }, /* @__PURE__ */ React.createElement("div", { style: { flex: 1, textAlign: "center" } }, /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 11, fontWeight: 700, textTransform: "uppercase", margin: "0 0 2px" } }, "Co\xFBt"), /* @__PURE__ */ React.createElement("p", { style: { color: C.text, fontSize: 15, fontWeight: 800, margin: 0, ...F } }, totalCost.toFixed(2), "\u20AC")), sell > 0 && /* @__PURE__ */ React.createElement("div", { style: { flex: 1, textAlign: "center", borderLeft: `1px solid ${C.border}`, paddingLeft: 12 } }, /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 11, fontWeight: 700, textTransform: "uppercase", margin: "0 0 2px" } }, "B\xE9n\xE9fice"), /* @__PURE__ */ React.createElement("p", { style: { color: C.ok, fontSize: 15, fontWeight: 800, margin: 0, ...F } }, "+", (sell - totalCost).toFixed(2), "\u20AC")), margin !== null && /* @__PURE__ */ React.createElement("div", { style: { flex: 1, textAlign: "center", borderLeft: `1px solid ${C.border}`, paddingLeft: 12 } }, /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 11, fontWeight: 700, textTransform: "uppercase", margin: "0 0 2px" } }, "Marge"), /* @__PURE__ */ React.createElement("p", { style: { color: marginColor, fontSize: 15, fontWeight: 800, margin: 0, ...F } }, margin, "%"))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 8 } }, recipe.ingredients.filter(function(i2) {
+      return i2.productId;
+    }).map(function(ing, j) {
+      var prod = stock.find(function(p) {
+        return String(p.id) === String(ing.productId);
+      });
+      return prod ? /* @__PURE__ */ React.createElement("span", { key: j, style: { padding: "3px 9px", borderRadius: 12, background: C.gold + "10", color: C.gold, fontSize: 12, fontWeight: 600 } }, prod.emoji, " ", prod.name, " \xD7", ing.qty) : null;
+    })), recipe.steps && /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 13, lineHeight: 1.6, margin: "6px 0 0" } }, recipe.steps)), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", borderTop: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("button", { onClick: function() {
+      setEditRecipe(recipe);
+    }, style: { flex: 1, padding: "10px", background: "transparent", border: "none", color: C.muted, fontSize: 13, fontWeight: 600, cursor: "pointer", ...S } }, "\u270E Modifier"), /* @__PURE__ */ React.createElement("button", { onClick: function() {
+      setRecipes(function(rs) {
+        return rs.filter(function(r) {
+          return r.id !== recipe.id;
+        });
+      });
+    }, style: { flex: 1, padding: "10px", background: "transparent", border: "none", borderLeft: `1px solid ${C.border}`, color: C.danger, fontSize: 13, fontWeight: 600, cursor: "pointer", ...S } }, "\u{1F5D1} Supprimer")));
+  })), tab === "comparaison" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h2", { style: { ...F, color: C.text, fontSize: 22, fontWeight: 700, margin: 0 } }, "\u{1F4CA} Comparaison"), /* @__PURE__ */ React.createElement("p", { style: { color: C.muted, fontSize: 14, margin: "3px 0 0" } }, snapshots.length, " inventaire(s) sauvegard\xE9(s)")), /* @__PURE__ */ React.createElement(Btn, { kids: "\u{1F4F8} Sauvegarder maintenant", onClick: function() {
     var snap = {
       id: Date.now(),
       date: (/* @__PURE__ */ new Date()).toISOString(),
@@ -1977,6 +2173,8 @@ function App() {
   const [syncUrl, setSyncUrl] = useLS("bl2_syncurl", "");
   const [ejKey, setEjKey] = useLS("bl2_ejkey", "");
   const [theme, setTheme] = useLS("bl2_theme", "light");
+  const [prices, setPrices] = useLS("bl2_prices", {});
+  const [recipes, setRecipes] = useLS("bl2_recipes", []);
   const [syncStatus, setSyncStatus] = useState("idle");
   const [user, setUser] = useState(null);
   const actRef = useRef(Date.now());
@@ -2091,7 +2289,7 @@ function App() {
     cocktails: /* @__PURE__ */ React.createElement(Cocktails, { stock }),
     factures: /* @__PURE__ */ React.createElement(Fournisseurs, { stock, setStock })
   };
-  return /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "'DM Sans',system-ui,sans-serif", background: C.bg, minHeight: "100vh", color: C.text } }, /* @__PURE__ */ React.createElement("div", { style: { paddingBottom: 88 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 12, padding: "16px 18px 10px", background: C.card, borderBottom: `1px solid ${C.border}`, boxShadow: "0 1px 12px #0d7a6e0a" } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 22 } }, "\u{1F378}"), /* @__PURE__ */ React.createElement("span", { style: { ...F, color: C.gold, fontSize: 22, fontWeight: 700, flex: 1 } }, "BarOm\xE8tre"), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 14, color: C.muted } }, user.emoji, " ", user.name)), tab === "manager" ? /* @__PURE__ */ React.createElement(Manager, { stock, setStock, checklist: check, setChecklist: setCheck, employees: emps, setEmployees: setEmps, user, autoLogout: alogout, setAutoLogout: setAl, notes, setNotes, cats, setCats, repEmail, setRepEmail, ejKey, setEjKey, history, setHistory, addHist, syncUrl, setSyncUrl, syncStatus, pushSync, pullSync, snapshots, setSnapshots, theme, setTheme }) : pages[tab]), /* @__PURE__ */ React.createElement("div", { style: { position: "fixed", bottom: 0, left: 0, right: 0, background: "rgba(255,255,255,0.96)", borderTop: `1px solid ${C.border}`, backdropFilter: "blur(20px)", boxShadow: "0 -4px 24px #1e1e2e0a", display: "flex", zIndex: 50 } }, TABS.map((t) => {
+  return /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "'DM Sans',system-ui,sans-serif", background: C.bg, minHeight: "100vh", color: C.text } }, /* @__PURE__ */ React.createElement("div", { style: { paddingBottom: 88 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 12, padding: "16px 18px 10px", background: C.card, borderBottom: `1px solid ${C.border}`, boxShadow: "0 1px 12px #0d7a6e0a" } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 22 } }, "\u{1F378}"), /* @__PURE__ */ React.createElement("span", { style: { ...F, color: C.gold, fontSize: 22, fontWeight: 700, flex: 1 } }, "BarOm\xE8tre"), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 14, color: C.muted } }, user.emoji, " ", user.name)), tab === "manager" ? /* @__PURE__ */ React.createElement(Manager, { stock, setStock, checklist: check, setChecklist: setCheck, employees: emps, setEmployees: setEmps, user, autoLogout: alogout, setAutoLogout: setAl, notes, setNotes, cats, setCats, repEmail, setRepEmail, ejKey, setEjKey, history, setHistory, addHist, syncUrl, setSyncUrl, syncStatus, pushSync, pullSync, snapshots, setSnapshots, theme, setTheme, prices, setPrices, recipes, setRecipes }) : pages[tab]), /* @__PURE__ */ React.createElement("div", { style: { position: "fixed", bottom: 0, left: 0, right: 0, background: "rgba(255,255,255,0.96)", borderTop: `1px solid ${C.border}`, backdropFilter: "blur(20px)", boxShadow: "0 -4px 24px #1e1e2e0a", display: "flex", zIndex: 50 } }, TABS.map((t) => {
     var active = tab === t.id, locked = t.id === "manager" && !isMgr;
     return /* @__PURE__ */ React.createElement("button", { key: t.id, onClick: () => setTab(t.id), style: { flex: 1, padding: "12px 4px 16px", border: "none", background: "transparent", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 4, position: "relative", opacity: locked ? 0.35 : 1 } }, /* @__PURE__ */ React.createElement("div", { style: { position: "relative", display: "inline-block" } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 22, lineHeight: 1 } }, t.emoji), t.badge > 0 && /* @__PURE__ */ React.createElement("span", { style: { position: "absolute", top: -6, right: -8, background: C.danger, color: "#fff", borderRadius: "50%", width: 16, height: 16, fontSize: 10, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1 } }, t.badge)), /* @__PURE__ */ React.createElement("span", { style: { color: active ? C.gold : C.muted, fontSize: 11, fontWeight: active ? 700 : 500, textTransform: "uppercase", letterSpacing: 0.3 } }, t.label), active && /* @__PURE__ */ React.createElement("div", { style: { position: "absolute", bottom: 0, left: "18%", right: "18%", height: 3, background: `linear-gradient(90deg,${C.gold},${C.amber})`, borderRadius: 4 } }));
   })));
@@ -2109,6 +2307,6 @@ function mountApp(){
 }
 mountApp();
 </script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister();});});setTimeout(function(){var b=new Blob(["const C='bm-v25';self.addEventListener('install',function(e){self.skipWaiting();e.waitUntil(caches.keys().then(function(k){return Promise.all(k.map(function(n){return caches.delete(n);}));}));});self.addEventListener('activate',function(e){self.clients.claim();});self.addEventListener('fetch',function(e){if(e.request.mode==='navigate'){e.respondWith(fetch(e.request));return;}});"],{type:"application/javascript"});navigator.serviceWorker.register(URL.createObjectURL(b),{scope:"/"}).catch(function(){});},1000);}</script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister();});});setTimeout(function(){var b=new Blob(["const C='bm-v26';self.addEventListener('install',function(e){self.skipWaiting();e.waitUntil(caches.keys().then(function(k){return Promise.all(k.map(function(n){return caches.delete(n);}));}));});self.addEventListener('activate',function(e){self.clients.claim();});self.addEventListener('fetch',function(e){if(e.request.mode==='navigate'){e.respondWith(fetch(e.request));return;}});"],{type:"application/javascript"});navigator.serviceWorker.register(URL.createObjectURL(b),{scope:"/"}).catch(function(){});},1000);}</script>
 </body>
 </html>
